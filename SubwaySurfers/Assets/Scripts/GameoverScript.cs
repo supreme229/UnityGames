@@ -19,6 +19,7 @@ public class GameoverScript : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         Time.timeScale = 1f;
+        GameManager.resetScore();
     }
     public void Quit()
     {

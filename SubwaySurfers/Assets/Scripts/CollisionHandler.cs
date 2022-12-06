@@ -16,14 +16,11 @@ public class CollisionHandler : MonoBehaviour
         gameoverCanvas = GameObject.FindGameObjectWithTag("GameoverUI").GetComponent<Canvas>();
         gameoverCanvas.gameObject.SetActive(false);
         audioSource = GetComponent<AudioSource>();
-
         clips["coin-pickup"] = Resources.Load<AudioClip>("Audio/Sounds/CoinPickup");
     }
 
     void Update()
-    {
-
-    }
+    {    }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -31,7 +28,17 @@ public class CollisionHandler : MonoBehaviour
         {
             gameoverCanvas.gameObject.SetActive(true);
             Time.timeScale = 0f;
+            GameManager.setGameOn(false);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Bonus")
+        {
+            Destroy(other.gameObject);
             audioSource.PlayOneShot(clips["coin-pickup"]);
+            GameManager.updateScore(3);
         }
     }
 }

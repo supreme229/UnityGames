@@ -14,7 +14,7 @@ public class TileManager : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        tilesCreator(3);
+        tilesCreator(0);
         for(int i = 0; i < 19; i++)
         {
             tilesCreator();
