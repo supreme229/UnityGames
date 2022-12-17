@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController controller;
     private Animator animator;
+    private AudioSource audioSource;
+
     private Vector3 velocity = Vector3.zero;
     private int playerLane = 0;
     private int nextLane = 0;
@@ -17,10 +19,12 @@ public class PlayerMovement : MonoBehaviour
     private float jumpHeight = 3f;
     private bool isSliding = false;
     private float scoreBorder = 5f;
+
     private void Start()
     {
         controller = gameObject.GetComponent<CharacterController>();
         animator = gameObject.GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -45,11 +49,16 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space) && controller.isGrounded && !isSliding)
             {
+                AudioManager.Instance.playJumpSound(audioSource);
                 velocity.y = Mathf.Sqrt(jumpHeight * 2 * -gravity);
             }
 
             if (controller.isGrounded && !isSliding)
             {
+                if (animator.GetBool("Jump"))
+                {
+                    AudioManager.Instance.playLandingSound(audioSource);
+                }
                 animator.SetBool("Jump", false);
                 controller.height = 1.75f;
             }
@@ -61,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.S) && controller.isGrounded && !isSliding)
             {
+                AudioManager.Instance.playSlideSound(audioSource);
                 StartCoroutine(Slide());
             }
 
@@ -103,26 +113,25 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(0.25f);
 
-        controller.center = new Vector3(0.2f, 0.3f, 0);
+        controller.center = new Vector3(0.0f, 0.3f, 0);
         controller.height = 0.3f;
 
         yield return new WaitForSeconds(0.25f);
 
-        controller.center = new Vector3(0.2f, 0.35f, 0);
+        controller.center = new Vector3(0.0f, 0.35f, 0);
         controller.height = 0.6f;
 
         yield return new WaitForSeconds(0.3f);
 
-        controller.center = new Vector3(0.2f, 0.35f, 0);
-        controller.height = 0.7f;
+        controller.center = new Vector3(0.0f, 0.45f, 0);
 
-        yield return new WaitForSeconds(1.15f - 0.8f);
+        yield return new WaitForSeconds(0.2f);
 
         animator.SetBool("Slide", false);
 
         isSliding = false;
 
-        controller.center = new Vector3(0f, 0.9f, 0f);
+        controller.center = new Vector3(0f, 0.92f, 0f);
         controller.height = 1.75f;
     }
 }

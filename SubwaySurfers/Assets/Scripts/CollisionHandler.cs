@@ -8,7 +8,6 @@ public class CollisionHandler : MonoBehaviour
     private CharacterController controller;
     private Canvas gameoverCanvas;
     private AudioSource audioSource;
-    private Dictionary<string, AudioClip> clips = new Dictionary<string, AudioClip>();
 
     void Start()
     {
@@ -16,7 +15,6 @@ public class CollisionHandler : MonoBehaviour
         gameoverCanvas = GameObject.FindGameObjectWithTag("GameoverUI").GetComponent<Canvas>();
         gameoverCanvas.gameObject.SetActive(false);
         audioSource = GetComponent<AudioSource>();
-        clips["coin-pickup"] = Resources.Load<AudioClip>("Audio/Sounds/CoinPickup");
     }
 
     void Update()
@@ -26,6 +24,7 @@ public class CollisionHandler : MonoBehaviour
     {
         if (hit.collider.tag == "Obstacle")
         {
+            AudioManager.Instance.playDieSound(audioSource);
             gameoverCanvas.gameObject.SetActive(true);
             Time.timeScale = 0f;
             GameManager.setGameOn(false);
@@ -37,7 +36,7 @@ public class CollisionHandler : MonoBehaviour
         if(other.tag == "Bonus")
         {
             Destroy(other.gameObject);
-            audioSource.PlayOneShot(clips["coin-pickup"]);
+            AudioManager.Instance.playCoinPickupSound(audioSource);
             GameManager.updateScore(3);
         }
     }
